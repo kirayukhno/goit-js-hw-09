@@ -1,0 +1,38 @@
+let formData = {
+    email: "",
+    message: "",
+};
+
+const form = document.querySelector(".feedback-form");
+const localStorageKey = "feedback-form-state";
+
+const storedData = localStorage.getItem(localStorageKey);
+if (storedData) {
+    const parsedData = JSON.parse(storedData);
+    formData.email = parsedData.email || "";
+    formData.message = parsedData.message || "";
+
+    form.elements.email.value = formData.email;
+    form.elements.message.value = formData.message;
+};
+
+
+form.addEventListener("input", event => {
+    const { name, value } = event.target;
+    formData[name] = value.trim();
+    localStorage.setItem(localStorageKey, JSON.stringify(formData));
+});
+
+form.addEventListener("submit", event => {
+    event.preventDefault();
+    const { email, message } = formData;
+    if (email === "" || message === "") {
+        return alert("Fill please all fields");
+    }
+
+    console.log(formData);
+
+    localStorage.removeItem(localStorageKey);
+    formData = { email: "", message: "", };    
+    form.reset();
+});
